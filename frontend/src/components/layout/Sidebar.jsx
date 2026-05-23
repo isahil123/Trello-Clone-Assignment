@@ -64,7 +64,6 @@ const Sidebar = ({ boards = [], activeBoardId, isOpen, setSidebarOpen }) => {
               <span>—</span>
             </div>
           </div>
-          </div>
         </div>
 
         {/* Views Section */}
