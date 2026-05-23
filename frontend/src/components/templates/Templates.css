@@ -2,12 +2,12 @@
   flex-grow: 1;
   padding: 40px 60px;
   overflow-y: auto;
-  max-width: 1000px;
-  width: 100%;
 }
 
 .templates-container {
   width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
   color: #b6c2cf;
   user-select: none;
   -webkit-user-select: none;
