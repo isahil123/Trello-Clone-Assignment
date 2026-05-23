@@ -47,7 +47,7 @@ app.use("/api", (req, res, next) => {
 });
 
 // Serve frontend in production
-const frontendPath = path.join(__dirname, "../../../frontend/dist");
+const frontendPath = path.join(__dirname, "../../frontend/dist");
 app.use(express.static(frontendPath));
 
 // Fallback to React app
