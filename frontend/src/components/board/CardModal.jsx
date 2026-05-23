@@ -322,7 +322,7 @@ const CardModal = ({ card, listTitle, boardId, onClose }) => {
     return Math.round((done / checklist.items.length) * 100);
   };
 
-  // TODO: Implement real-time websockets here later so users don't have to refresh for new comments
+  // Real-time websockets can be added here in the future
 
   return (
     <div className="card-modal-overlay" onClick={onClose}>
