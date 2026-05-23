@@ -57,7 +57,7 @@ const TemplatesPage = ({
   return (
     <>
       <div className="content-area" style={{ width: "100%", display: "flex" }}>
-        <Templates onBoardCreated={handleBoardCreated} />
+        <Templates onBoardCreated={handleBoardCreated} isSidebarOpen={isSidebarOpen} setSidebarOpen={setSidebarOpen} />
       </div>
     </>
   );
@@ -147,9 +147,9 @@ function AppContent() {
         <Routes>
           <Route
             path="/"
-            element={<Dashboard boards={boards} onBoardsLoaded={setBoards} />}
+            element={<Dashboard boards={boards} onBoardsLoaded={setBoards} isSidebarOpen={isSidebarOpen} setSidebarOpen={setSidebarOpen} />}
           />
-          <Route path="/home" element={<HomePage boards={boards} />} />
+          <Route path="/home" element={<HomePage boards={boards} isSidebarOpen={isSidebarOpen} setSidebarOpen={setSidebarOpen} />} />
           <Route
             path="/templates"
             element={

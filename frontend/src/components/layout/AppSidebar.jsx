@@ -6,7 +6,7 @@ import { toast } from 'react-hot-toast';
  * AppSidebar — Shared navigation sidebar used by Dashboard, Templates and Home pages.
  * Uses useLocation() so active states are always in sync with the current route.
  */
-const AppSidebar = ({ boards = [] }) => {
+const AppSidebar = ({ boards = [], isSidebarOpen, setSidebarOpen }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [workspaceOpen, setWorkspaceOpen] = useState(true);
@@ -14,6 +14,11 @@ const AppSidebar = ({ boards = [] }) => {
   const isActive = (path) => {
     if (path === '/') return location.pathname === '/';
     return location.pathname.startsWith(path);
+  };
+
+  const handleNav = (path) => {
+    navigate(path);
+    if (setSidebarOpen) setSidebarOpen(false);
   };
 
   const handleOutOfScope = (e) => {
@@ -27,7 +32,7 @@ const AppSidebar = ({ boards = [] }) => {
   const navItem = (path, label, Icon) => (
     <div
       className={`sidebar-nav-item${isActive(path) ? ' active' : ''}`}
-      onClick={() => navigate(path)}
+      onClick={() => handleNav(path)}
     >
       <span className="icon">{Icon}</span>
       {label}
@@ -35,9 +40,17 @@ const AppSidebar = ({ boards = [] }) => {
   );
 
   return (
-    <div className="dashboard-sidebar">
-      {/* Top nav links */}
-      <div className="sidebar-nav">
+    <>
+      {isSidebarOpen && (
+        <div 
+          className="sidebar-overlay"
+          style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 90 }}
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+      <div className={`dashboard-sidebar ${isSidebarOpen ? 'open' : ''}`}>
+        {/* Top nav links */}
+        <div className="sidebar-nav">
         {navItem('/', 'Boards',
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
             <path d="M4 4h6v16H4V4zm10 0h6v8h-6V4z" />
@@ -45,7 +58,7 @@ const AppSidebar = ({ boards = [] }) => {
         )}
         <div
           className={`sidebar-nav-item${isActive('/templates') ? ' active' : ''}`}
-          onClick={() => navigate('/templates')}
+          onClick={() => handleNav('/templates')}
         >
           <span className="icon">
             <svg fill="currentColor" viewBox="0 0 16 16" width="16" height="16" role="presentation">
@@ -200,6 +213,7 @@ const AppSidebar = ({ boards = [] }) => {
         </div>
       )}
     </div>
+    </>
   );
 };
 

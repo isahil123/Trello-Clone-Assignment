@@ -18,13 +18,13 @@ const BOARD_GRADIENTS = [
  * Home page — distinct /home route.
  * Shows a personalized greeting, star-able boards, and recent activity.
  */
-const HomePage = ({ boards }) => {
+const HomePage = ({ boards, isSidebarOpen, setSidebarOpen }) => {
   const navigate = useNavigate();
   const getGradient = (i) => BOARD_GRADIENTS[i % BOARD_GRADIENTS.length];
 
   return (
     <div className="dashboard-layout">
-      <AppSidebar boards={boards} />
+      <AppSidebar boards={boards} isSidebarOpen={isSidebarOpen} setSidebarOpen={setSidebarOpen} />
 
       <div className="dashboard-content">
         <div className="dashboard-main-inner">

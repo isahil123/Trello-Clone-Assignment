@@ -130,7 +130,12 @@ const TopNav = ({ setSidebarOpen, onBoardCreated }) => {
       <nav className="topnav" ref={navRef}>
         {/* ── Left ── */}
         <div className="topnav-left">
-          <button className="topnav-btn" title="App switcher" onClick={() => showToast('App switcher')}>
+          <button className="topnav-btn mobile-menu-btn" title="Menu" onClick={() => setSidebarOpen(true)}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" />
+            </svg>
+          </button>
+          <button className="topnav-btn app-switcher-btn" title="App switcher" onClick={() => showToast('App switcher')}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
               <path d="M4 4h4v4H4V4zm6 0h4v4h-4V4zm6 0h4v4h-4V4zM4 10h4v4H4v-4zm6 0h4v4h-4v-4zm6 0h4v4h-4v-4zM4 16h4v4H4v-4zm6 0h4v4h-4v-4zm6 0h4v4h-4v-4z" />
             </svg>

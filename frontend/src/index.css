@@ -137,6 +137,12 @@ html, body {
   nav.topnav .searchWrapperFocused .searchInput {
     display: block;
   }
+  .mobile-menu-btn {
+    display: flex !important;
+  }
+  .app-switcher-btn {
+    display: none !important;
+  }
 
   /* Dashboard */
   .dashboard-container {

@@ -589,3 +589,34 @@
   to   { opacity: 1; transform: translateY(0); }
 }
 
+
+@media (max-width: 768px) {
+  .dashboard-sidebar {
+    position: absolute;
+    top: 0;
+    left: -260px;
+    z-index: 100;
+    transition: left 0.3s ease;
+    height: 100%;
+    box-shadow: 4px 0 8px rgba(0,0,0,0.5);
+    background-color: #1d2125;
+  }
+  .dashboard-sidebar.open {
+    left: 0;
+  }
+  .dashboard-content {
+    padding: 20px 16px;
+  }
+  .board-tile {
+    width: calc(50% - 8px);
+  }
+}
+
+
+@media (max-width: 768px) {
+  .dashboard-layout {
+    position: relative;
+    overflow: hidden;
+  }
+}
+

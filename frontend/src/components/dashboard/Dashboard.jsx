@@ -56,7 +56,7 @@ const TEMPLATE_DATA = {
   ],
 };
 
-const Dashboard = ({ boards, onBoardsLoaded }) => {
+const Dashboard = ({ boards = [], onBoardsLoaded, isSidebarOpen, setSidebarOpen }) => {
   const navigate = useNavigate();
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [newBoardTitle, setNewBoardTitle] = useState('');
@@ -115,7 +115,7 @@ const Dashboard = ({ boards, onBoardsLoaded }) => {
   return (
     <div className="dashboard-layout">
       {/* Shared sidebar with live active states */}
-      <AppSidebar boards={boards} />
+      <AppSidebar boards={boards} isSidebarOpen={isSidebarOpen} setSidebarOpen={setSidebarOpen} />
 
       {/* Main Content */}
       <div className="dashboard-content">

@@ -51,7 +51,7 @@ const mockNewTemplates = [
   }
 ];
 
-const Templates = ({ onBoardCreated }) => {
+const Templates = ({ onBoardCreated, isSidebarOpen, setSidebarOpen }) => {
   const navigate = useNavigate();
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -80,7 +80,7 @@ const Templates = ({ onBoardCreated }) => {
 
   return (
     <div className="dashboard-layout">
-      <AppSidebar />
+      <AppSidebar isSidebarOpen={isSidebarOpen} setSidebarOpen={setSidebarOpen} />
 
       <div className="templates-content-area">
         <div className="templates-container">
