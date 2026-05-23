@@ -28,7 +28,9 @@ const Board = ({ boardId, isSidebarOpen, setSidebarOpen, boards = [] }) => {
     loading, 
     error, 
     fetchBoard, 
-    handleCardUpdate 
+    handleCardUpdate,
+    currentView,
+    setCurrentView
   } = useBoard();
 
   const [showAddList, setShowAddList] = useState(false);
@@ -39,7 +41,6 @@ const Board = ({ boardId, isSidebarOpen, setSidebarOpen, boards = [] }) => {
   // Filter states
   const [showFilterMenu, setShowFilterMenu] = useState(false);
   const [showViewsMenu, setShowViewsMenu] = useState(false);
-  const [currentView, setCurrentView] = useState('Board');
   const [filterKeyword, setFilterKeyword] = useState('');
   const [filterLabelColors, setFilterLabelColors] = useState([]);
   const [filterMemberIds, setFilterMemberIds] = useState([]);
@@ -294,8 +295,8 @@ const Board = ({ boardId, isSidebarOpen, setSidebarOpen, boards = [] }) => {
         boxShadow: isSidebarOpen ? '-4px 0 16px rgba(0,0,0,0.2)' : 'none',
       }}>
         <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', backgroundColor: 'transparent' }}>
-          <header className="board-header" style={{ borderBottom: 'none', background: 'transparent' }}>
-        <h1 className="board-title">{board.title}</h1>
+          <header className="board-header" style={{ padding: '8px 16px', display: 'flex', alignItems: 'center', backgroundColor: 'hsla(0,0%,0%,0.24)', color: '#fff', gap: '8px' }}>
+        <h1 className="board-title" style={{ fontSize: '18px', fontWeight: 'bold', margin: 0, padding: '0 8px', lineHeight: '32px', cursor: 'pointer' }}>{board.title}</h1>
         
         <button 
           onClick={toggleStar}
@@ -341,8 +342,8 @@ const Board = ({ boardId, isSidebarOpen, setSidebarOpen, boards = [] }) => {
           <button 
             className="views-button"
             style={{ 
-              backgroundColor: 'white', 
-              color: '#1d2125', 
+              backgroundColor: '#fff', 
+              color: '#172b4d', 
               border: 'none', 
               borderRadius: '3px', 
               padding: '6px 12px', 
@@ -372,39 +373,36 @@ const Board = ({ boardId, isSidebarOpen, setSidebarOpen, boards = [] }) => {
             setCurrentView={setCurrentView}
           />
         </div>
-        <div className="header-actions">
-          <button className="share-button" style={{ borderRadius: '50%', width: '32px', height: '32px', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#dfe1e6', color: '#172b4d' }}>S</button>
-          <button className="share-button" style={{ backgroundColor: 'transparent', color: '#fff' }}>⚡ Automation</button>
+        <div className="header-actions" style={{ display: 'flex', alignItems: 'center', gap: '8px', marginLeft: 'auto' }}>
+          <button className="share-button" style={{ borderRadius: '50%', width: '32px', height: '32px', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#dfe1e6', color: '#172b4d', border: 'none', fontWeight: 'bold' }}>S</button>
+          <button className="share-button" style={{ backgroundColor: 'hsla(0,0%,100%,0.2)', color: '#fff', border: 'none', borderRadius: '3px', padding: '6px 12px', display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', fontWeight: '500', transition: 'background-color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'hsla(0,0%,100%,0.3)'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'hsla(0,0%,100%,0.2)'}>⚡ Automation</button>
           <button 
             onClick={() => setShowFilterMenu(!showFilterMenu)}
             style={{ 
               display: 'inline-flex',
               alignItems: 'center',
               gap: '6px',
-              boxSizing: 'border-box',
-              color: hasActiveFilters ? '#1d2125' : 'rgb(255, 255, 255)',
-              colorScheme: 'dark',
+              color: hasActiveFilters ? '#1d2125' : '#fff',
               cursor: 'pointer',
-              flexShrink: 0,
-              fontFamily: '"Atlassian Sans", ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Ubuntu, "Helvetica Neue", sans-serif',
               fontWeight: 500,
-              lineHeight: '14px',
               padding: '6px 12px',
-              backgroundColor: hasActiveFilters ? '#579dff' : (showFilterMenu ? 'rgba(255,255,255,0.2)' : 'transparent'),
+              backgroundColor: hasActiveFilters ? '#579dff' : (showFilterMenu ? 'hsla(0,0%,100%,0.3)' : 'hsla(0,0%,100%,0.2)'),
               border: 'none',
               borderRadius: '3px',
               transition: 'background-color 0.2s',
             }}
+            onMouseEnter={(e) => { if(!hasActiveFilters) e.currentTarget.style.backgroundColor = 'hsla(0,0%,100%,0.3)'}}
+            onMouseLeave={(e) => { if(!hasActiveFilters) e.currentTarget.style.backgroundColor = showFilterMenu ? 'hsla(0,0%,100%,0.3)' : 'hsla(0,0%,100%,0.2)'}}
           >
             <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
               <path d="M11 12v1.5H5V12zm2-4.75v1.5H3v-1.5zm2-4.75V4H1V2.5z"></path>
             </svg>
             Filter
           </button>
-          <span className="header-divider" style={{ backgroundColor: 'hsla(0,0%,100%,0.2)' }}></span>
+          <span className="header-divider" style={{ backgroundColor: 'hsla(0,0%,100%,0.24)', width: '1px', height: '16px', margin: '0 4px' }}></span>
           <button 
             className="share-button" 
-            style={{ backgroundColor: '#dfe1e6', color: '#172b4d' }}
+            style={{ backgroundColor: '#dfe1e6', color: '#172b4d', border: 'none', borderRadius: '3px', padding: '6px 12px', fontWeight: '500', cursor: 'pointer' }}
             onClick={() => toast('Info: Feature out of scope for this assignment.', { icon: 'ℹ️' })}
           >
             Share

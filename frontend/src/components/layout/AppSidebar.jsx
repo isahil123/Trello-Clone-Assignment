@@ -150,6 +150,33 @@ const AppSidebar = ({ boards = [] }) => {
         </div>
       </div>
 
+      {/* Starred boards in sidebar */}
+      {boards.filter(b => b.isStarred).length > 0 && (
+        <div className="sidebar-recent-boards">
+          <div className="sidebar-section-label" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span>Starred boards</span>
+            <span style={{ cursor: 'pointer' }}>+</span>
+          </div>
+          {boards.filter(b => b.isStarred).map((board, i) => {
+            const colors = ['#0079bf', '#d29034', '#519839', '#b04632', '#89609e'];
+            return (
+              <div
+                key={board.id}
+                className="sidebar-board-item"
+                onClick={() => navigate(`/b/${board.id}`)}
+              >
+                <div
+                  className="sidebar-board-dot"
+                  style={{ backgroundColor: colors[i % colors.length] }}
+                />
+                <span className="sidebar-board-label">{board.title}</span>
+                <span style={{ marginLeft: 'auto', color: '#f2d600', fontSize: '14px' }}>★</span>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
       {/* Recent boards in sidebar */}
       {boards.length > 0 && (
         <div className="sidebar-recent-boards">

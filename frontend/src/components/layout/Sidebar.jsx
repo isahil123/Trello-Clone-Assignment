@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useBoard } from '../../context/BoardContext';
 
 const Sidebar = ({ boards = [], activeBoardId, isOpen, setSidebarOpen }) => {
+  const { currentView, setCurrentView } = useBoard();
   const navigate = useNavigate();
   const location = useLocation();
   const [showEmailModal, setShowEmailModal] = useState(false);
@@ -62,9 +64,42 @@ const Sidebar = ({ boards = [], activeBoardId, isOpen, setSidebarOpen }) => {
               <span>—</span>
             </div>
           </div>
+          </div>
         </div>
 
-        {/* Mail Feature - Consolidate your to-dos graphic */}
+        {/* Views Section */}
+        <div style={{ marginTop: '24px' }}>
+          <div style={{ padding: '0 4px', marginBottom: '8px', fontSize: '12px', fontWeight: 'bold', color: '#9fadbc' }}>
+            Board views
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            {['Board', 'Table', 'Calendar', 'Dashboard', 'Timeline', 'Map'].map(view => (
+              <div 
+                key={view}
+                onClick={() => {
+                  setCurrentView(view);
+                  if(window.innerWidth < 768) setSidebarOpen(false);
+                }}
+                style={{
+                  display: 'flex', alignItems: 'center', padding: '8px 12px',
+                  borderRadius: '4px', cursor: 'pointer',
+                  backgroundColor: currentView === view ? 'rgba(255,255,255,0.08)' : 'transparent',
+                  color: currentView === view ? '#579dff' : '#b6c2cf',
+                  transition: 'background-color 0.2s'
+                }}
+                onMouseEnter={(e) => { if(currentView !== view) e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.04)'}}
+                onMouseLeave={(e) => { if(currentView !== view) e.currentTarget.style.backgroundColor = 'transparent'}}
+              >
+                <span style={{ marginRight: '8px', fontSize: '14px' }}>
+                  {view === 'Board' ? '▤' : view === 'Table' ? '☰' : view === 'Calendar' ? '📅' : view === 'Dashboard' ? '📊' : view === 'Timeline' ? '☷' : '📍'}
+                </span>
+                <span style={{ fontSize: '14px' }}>{view}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Mail Feature - Consolidate your to-dos graphic (Moved down) */}
         <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', color: '#b6c2cf', padding: '32px 16px', marginTop: '32px' }}>
           <h3 style={{ margin: '0 0 12px 0', fontSize: '16px', color: '#fff' }}>Consolidate your to-dos</h3>
           <p style={{ margin: '0 0 32px 0', fontSize: '14px', lineHeight: '1.5', color: '#9fadbc' }}>Email it, say it, forward it — however it comes, get it into Trello fast.</p>

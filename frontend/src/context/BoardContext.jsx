@@ -10,6 +10,7 @@ export const BoardProvider = ({ children }) => {
   const [lists, setLists] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [currentView, setCurrentView] = useState('Board');
 
   const fetchBoard = useCallback(async (boardId) => {
     if (!boardId) return;
@@ -71,6 +72,8 @@ export const BoardProvider = ({ children }) => {
     handleCardAdded,
     handleCardUpdate,
     addList,
+    currentView,
+    setCurrentView,
   };
 
   return (
