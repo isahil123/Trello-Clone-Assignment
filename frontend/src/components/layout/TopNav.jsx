@@ -349,7 +349,7 @@ const TopNav = ({ setSidebarOpen, onBoardCreated }) => {
                   <div
                     key={path}
                     style={styles.profileMenuItem}
-                    onClick={() => { setActivePopup(null); navigate(path); }}
+                    onClick={() => { setActivePopup(null); showToast(`${label.replace(/[^a-zA-Z &]/g, '').trim()} coming soon`); }}
                     onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'hsla(0,0%,100%,0.08)'}
                     onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
                   >

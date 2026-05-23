@@ -8,7 +8,6 @@ import Dashboard from "./components/dashboard/Dashboard";
 import HomePage from "./components/dashboard/HomePage";
 import Board from "./components/board/Board";
 import Templates from "./components/templates/Templates";
-import WorkspacePage from "./components/workspace/WorkspacePage";
 import { BoardProvider } from "./context/BoardContext";
 import apiClient from "./api/client";
 import "./index.css";
@@ -64,16 +63,7 @@ const TemplatesPage = ({
   );
 };
 
-// Wrapper for Workspace pages (Members, Settings, etc.)
-const WorkspaceRoute = ({ boards, isSidebarOpen, setSidebarOpen }) => {
-  return (
-    <>
-      <div className="content-area" style={{ width: "100%", display: "flex" }}>
-        <WorkspacePage />
-      </div>
-    </>
-  );
-};
+
 
 function AppContent() {
   const [boards, setBoards] = useState([]);
@@ -171,116 +161,7 @@ function AppContent() {
               />
             }
           />
-          <Route
-            path="/members"
-            element={
-              <WorkspaceRoute
-                boards={boards}
-                isSidebarOpen={isSidebarOpen}
-                setSidebarOpen={setSidebarOpen}
-              />
-            }
-          />
-          <Route
-            path="/settings"
-            element={
-              <WorkspaceRoute
-                boards={boards}
-                isSidebarOpen={isSidebarOpen}
-                setSidebarOpen={setSidebarOpen}
-              />
-            }
-          />
-          <Route
-            path="/settings/profile"
-            element={
-              <WorkspaceRoute
-                boards={boards}
-                isSidebarOpen={isSidebarOpen}
-                setSidebarOpen={setSidebarOpen}
-              />
-            }
-          />
-          <Route
-            path="/settings/activity"
-            element={
-              <WorkspaceRoute
-                boards={boards}
-                isSidebarOpen={isSidebarOpen}
-                setSidebarOpen={setSidebarOpen}
-              />
-            }
-          />
-          <Route
-            path="/settings/cards"
-            element={
-              <WorkspaceRoute
-                boards={boards}
-                isSidebarOpen={isSidebarOpen}
-                setSidebarOpen={setSidebarOpen}
-              />
-            }
-          />
-          <Route
-            path="/settings/account"
-            element={
-              <WorkspaceRoute
-                boards={boards}
-                isSidebarOpen={isSidebarOpen}
-                setSidebarOpen={setSidebarOpen}
-              />
-            }
-          />
-          <Route
-            path="/settings/labs"
-            element={
-              <WorkspaceRoute
-                boards={boards}
-                isSidebarOpen={isSidebarOpen}
-                setSidebarOpen={setSidebarOpen}
-              />
-            }
-          />
-          <Route
-            path="/billing"
-            element={
-              <WorkspaceRoute
-                boards={boards}
-                isSidebarOpen={isSidebarOpen}
-                setSidebarOpen={setSidebarOpen}
-              />
-            }
-          />
-          <Route
-            path="/power-ups"
-            element={
-              <WorkspaceRoute
-                boards={boards}
-                isSidebarOpen={isSidebarOpen}
-                setSidebarOpen={setSidebarOpen}
-              />
-            }
-          />
-          <Route
-            path="/export"
-            element={
-              <WorkspaceRoute
-                boards={boards}
-                isSidebarOpen={isSidebarOpen}
-                setSidebarOpen={setSidebarOpen}
-              />
-            }
-          />
-          <Route
-            path="/linked-projects"
-            element={
-              <WorkspaceRoute
-                boards={boards}
-                isSidebarOpen={isSidebarOpen}
-                setSidebarOpen={setSidebarOpen}
-              />
-            }
-          />
+
           <Route
             path="/b/:boardId"
             element={
