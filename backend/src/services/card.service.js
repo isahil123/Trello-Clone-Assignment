@@ -24,6 +24,42 @@ class CardService {
     });
   }
 
+  async createCardFromTemplate(templateCardId, listId, position) {
+    const templateCard = await prisma.card.findUnique({
+      where: { id: templateCardId },
+      include: { labels: true, checklists: { include: { items: true } } }
+    });
+
+    if (!templateCard) throw new Error('Template card not found');
+
+    return await prisma.card.create({
+      data: {
+        title: templateCard.title,
+        description: templateCard.description,
+        listId: listId,
+        position: position,
+        isTemplate: false,
+        labels: {
+          create: templateCard.labels.map(l => ({ labelId: l.labelId }))
+        },
+        checklists: {
+          create: templateCard.checklists.map(cl => ({
+            title: cl.title,
+            items: {
+              create: cl.items.map(item => ({
+                title: item.title,
+                position: item.position,
+                isCompleted: item.isCompleted,
+                dueDate: item.dueDate
+              }))
+            }
+          }))
+        }
+      },
+      include: { labels: { include: { label: true } }, checklists: { include: { items: true } }, members: { include: { user: true } }, comments: true }
+    });
+  }
+
   async deleteCard(cardId) {
     return await prisma.card.delete({
       where: { id: cardId }
@@ -76,9 +112,9 @@ class CardService {
     });
   }
 
-  async addComment(cardId, userId, text) {
+  async addComment(cardId, userId, text, isActivity = false) {
     return await prisma.comment.create({
-      data: { cardId, userId, text },
+      data: { cardId, userId, text, isActivity },
       include: { user: true }
     });
   }
@@ -88,6 +124,39 @@ class CardService {
       where: { cardId },
       orderBy: { createdAt: 'desc' },
       include: { user: true }
+    });
+  }
+
+  // --- Checklists ---
+
+  async addChecklist(cardId, title) {
+    return await prisma.checklist.create({
+      data: { cardId, title }
+    });
+  }
+
+  async deleteChecklist(checklistId) {
+    return await prisma.checklist.delete({
+      where: { id: checklistId }
+    });
+  }
+
+  async addChecklistItem(checklistId, title, position) {
+    return await prisma.checklistItem.create({
+      data: { checklistId, title, position }
+    });
+  }
+
+  async updateChecklistItem(itemId, data) {
+    return await prisma.checklistItem.update({
+      where: { id: itemId },
+      data
+    });
+  }
+
+  async deleteChecklistItem(itemId) {
+    return await prisma.checklistItem.delete({
+      where: { id: itemId }
     });
   }
 }

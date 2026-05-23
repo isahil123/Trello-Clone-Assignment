@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 const LABEL_COLOR_MAP = {
   RED: "#f87168",
@@ -12,62 +12,40 @@ const LABEL_COLOR_MAP = {
   BLACK: "#8c9bab",
 };
 
-const LabelPicker = ({
-  showLabelsPopover,
-  setShowLabelsPopover,
-  setShowMembersPopover,
-  setShowDatePicker,
-  boardLabels,
-  cardLabelIds,
-  handleToggleLabel
-}) => {
+const LabelPicker = ({ boardLabels, cardLabelIds, onToggleLabel, onClose }) => {
   return (
-    <div style={{ position: "relative" }}>
-      <button
-        className="card-modal-btn side-btn"
-        onClick={() => {
-          setShowLabelsPopover(!showLabelsPopover);
-          setShowMembersPopover(false);
-          setShowDatePicker(false);
-        }}
-      >
-        🏷️ Labels
-      </button>
-      {showLabelsPopover && (
-        <div className="card-modal-popover">
-          <div className="popover-header">
-            <span className="popover-title">Labels</span>
-            <button
-              className="popover-close"
-              onClick={() => setShowLabelsPopover(false)}
-            >
-              ✕
-            </button>
-          </div>
-          <div className="popover-body">
-            {boardLabels.map((label) => (
+    <div className="card-modal-popover">
+      <div className="popover-header">
+        <span className="popover-title">Urgency</span>
+        <button className="popover-close" onClick={onClose}>
+          ✕
+        </button>
+      </div>
+      <div className="popover-body">
+        <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+          {boardLabels.map((label) => {
+            const isSelected = cardLabelIds.includes(label.id);
+            const bgColor = LABEL_COLOR_MAP[label.color] || "#b3bac5";
+            return (
               <div
                 key={label.id}
-                className="label-option"
-                onClick={() => handleToggleLabel(label.id)}
+                onClick={(e) => onToggleLabel(label.id, e)}
+                className="label-color-bar"
+                style={{
+                  backgroundColor: bgColor,
+                  padding: "6px 12px",
+                  minHeight: "32px",
+                  position: "relative",
+                  fontWeight: "600",
+                }}
               >
-                <div
-                  className="label-color-bar"
-                  style={{
-                    backgroundColor:
-                      LABEL_COLOR_MAP[label.color] || "#b3bac5",
-                  }}
-                >
-                  {label.title || ""}
-                </div>
-                {cardLabelIds.includes(label.id) && (
-                  <span className="check-mark">✓</span>
-                )}
+                <span style={{ flex: 1 }}>{label.title || ""}</span>
+                {isSelected && <span style={{ marginLeft: "8px" }}>✓</span>}
               </div>
-            ))}
-          </div>
+            );
+          })}
         </div>
-      )}
+      </div>
     </div>
   );
 };

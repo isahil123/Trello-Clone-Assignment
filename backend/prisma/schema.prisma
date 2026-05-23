@@ -28,6 +28,7 @@ model Board {
   id          String   @id @default(uuid())
   title       String
   description String?
+  background  String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   isStarred   Boolean  @default(false)
@@ -60,17 +61,15 @@ model BoardMember {
 
 model List {
   id        String   @id @default(uuid())
-  title     String
-  position  Float    
-  boardId   String
-  createdAt DateTime @default(now())
+  title       String
+  position    Float    
+  boardId     String
+  isCollapsed Boolean  @default(false)
+  createdAt   DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   board Board  @relation(fields: [boardId], references: [id], onDelete: Cascade)
   cards Card[]
-
-  // Ensures no two lists on the same board have the exact same position
-  @@unique([boardId, position])
 }
 
 model Card {
@@ -80,9 +79,13 @@ model Card {
   position    Float
   isArchived  Boolean   @default(false)
   dueDate     DateTime?
+  coverColor  String?
+  coverImage  String?
   listId      String
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+  isTemplate  Boolean   @default(false)
+  isCompleted Boolean   @default(false)
 
   list       List          @relation(fields: [listId], references: [id], onDelete: Cascade)
   checklists Checklist[]
@@ -90,9 +93,6 @@ model Card {
   members    CardMember[]
   comments   Comment[]
 
-  // Ensures no two cards in the same list have the exact same position
-  @@unique([listId, position])
-  
   // Index for querying cards by upcoming deadlines across lists
   @@index([dueDate]) 
 }
@@ -185,11 +185,12 @@ model ChecklistItem {
 
 model Comment {
   id        String   @id @default(uuid())
-  text      String
-  cardId    String
-  userId    String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  text       String
+  cardId     String
+  userId     String
+  isActivity Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   card Card @relation(fields: [cardId], references: [id], onDelete: Cascade)
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)

@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useBoard } from '../../context/BoardContext';
+import apiClient from '../../api/client';
+import toast from 'react-hot-toast';
 
 const Sidebar = ({ boards = [], activeBoardId, isOpen, setSidebarOpen }) => {
-  const { currentView, setCurrentView } = useBoard();
+  const { currentView, setCurrentView, lists, handleCardAdded } = useBoard();
   const navigate = useNavigate();
   const location = useLocation();
   const [showEmailModal, setShowEmailModal] = useState(false);
@@ -19,6 +21,7 @@ const Sidebar = ({ boards = [], activeBoardId, isOpen, setSidebarOpen }) => {
       {/* Mobile overlay */}
       {isOpen && (
         <div 
+          className="mobile-overlay"
           style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 90 }}
           onClick={() => setSidebarOpen(false)}
         />
@@ -44,57 +47,38 @@ const Sidebar = ({ boards = [], activeBoardId, isOpen, setSidebarOpen }) => {
               type="text" 
               placeholder="Add a card" 
               style={styles.addCardInput}
-              onKeyDown={(e) => {
+              onKeyDown={async (e) => {
                 if (e.key === 'Enter') {
-                  e.target.value = '';
-                  // Simulate adding card
+                  const title = e.target.value.trim();
+                  if (!title) return;
+                  if (!lists || lists.length === 0) {
+                    toast.error("Please add a list to the board first.");
+                    return;
+                  }
+                  try {
+                    const firstList = lists[0];
+                    const position = firstList.cards && firstList.cards.length > 0 
+                      ? firstList.cards[firstList.cards.length - 1].position + 1024 
+                      : 1024;
+                    
+                    const response = await apiClient.post('/cards', {
+                      title,
+                      listId: firstList.id,
+                      position
+                    });
+                    
+                    if (handleCardAdded) {
+                      handleCardAdded(firstList.id, response.data.data);
+                    }
+                    toast.success("Card added to " + firstList.title);
+                    e.target.value = '';
+                  } catch (err) {
+                    console.error("Failed to add card", err);
+                    toast.error("Failed to add card to Inbox");
+                  }
                 }
               }}
             />
-          </div>
-          <div 
-            style={{ backgroundColor: '#1c2b41', borderRadius: '8px', padding: '12px', marginTop: '8px', cursor: 'pointer' }}
-            onClick={() => setShowEmailModal(true)}
-          >
-            <p style={{ margin: '0 0 8px 0', fontSize: '13px', color: '#9fadbc' }}>
-              See it, send it, save it for later
-            </p>
-            <div style={{ display: 'flex', gap: '12px', color: '#9fadbc', fontSize: '14px' }}>
-              <span>✉</span>
-              <span>—</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Views Section */}
-        <div style={{ marginTop: '24px' }}>
-          <div style={{ padding: '0 4px', marginBottom: '8px', fontSize: '12px', fontWeight: 'bold', color: '#9fadbc' }}>
-            Board views
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-            {['Board', 'Table', 'Calendar', 'Dashboard', 'Timeline', 'Map'].map(view => (
-              <div 
-                key={view}
-                onClick={() => {
-                  setCurrentView(view);
-                  if(window.innerWidth < 768) setSidebarOpen(false);
-                }}
-                style={{
-                  display: 'flex', alignItems: 'center', padding: '8px 12px',
-                  borderRadius: '4px', cursor: 'pointer',
-                  backgroundColor: currentView === view ? 'rgba(255,255,255,0.08)' : 'transparent',
-                  color: currentView === view ? '#579dff' : '#b6c2cf',
-                  transition: 'background-color 0.2s'
-                }}
-                onMouseEnter={(e) => { if(currentView !== view) e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.04)'}}
-                onMouseLeave={(e) => { if(currentView !== view) e.currentTarget.style.backgroundColor = 'transparent'}}
-              >
-                <span style={{ marginRight: '8px', fontSize: '14px' }}>
-                  {view === 'Board' ? '▤' : view === 'Table' ? '☰' : view === 'Calendar' ? '📅' : view === 'Dashboard' ? '📊' : view === 'Timeline' ? '☷' : '📍'}
-                </span>
-                <span style={{ fontSize: '14px' }}>{view}</span>
-              </div>
-            ))}
           </div>
         </div>
 

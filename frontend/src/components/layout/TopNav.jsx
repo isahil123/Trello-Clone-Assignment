@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast as hotToast } from 'react-hot-toast';
 import apiClient from '../../api/client';
+import useBoardStore from '../../store/useBoardStore';
 import './TopNav.css';
 
 const CURRENT_USER = { name: 'User', initials: 'U', role: 'Default Admin' };
@@ -20,7 +21,7 @@ const TopNav = ({ setSidebarOpen, onBoardCreated }) => {
   const togglePopup = (popupName) => setActivePopup(prev => prev === popupName ? null : popupName);
 
   // ── Create modal (keeps separate state as it's a fullscreen overlay) ──
-  const [isCreateBoardModalOpen, setIsCreateBoardModalOpen] = useState(false);
+  const { isCreateBoardModalOpen, setCreateBoardModalOpen } = useBoardStore();
   const [boardTitle, setBoardTitle] = useState('');
   const [isCreating, setIsCreating] = useState(false);
 
@@ -105,7 +106,7 @@ const TopNav = ({ setSidebarOpen, onBoardCreated }) => {
     const optimisticBoard = { id: tempId, title, isOptimistic: true };
     if (onBoardCreated) onBoardCreated(optimisticBoard);
 
-    setIsCreateBoardModalOpen(false);
+    setCreateBoardModalOpen(false);
     setBoardTitle('');
     setActivePopup(null);
     navigate(`/b/${tempId}`); // navigate immediately while API call goes out
@@ -161,7 +162,7 @@ const TopNav = ({ setSidebarOpen, onBoardCreated }) => {
                 {/* Create board → opens modal */}
                 <div
                   className="topnav-menu-item"
-                  onClick={() => { setActivePopup(null); setIsCreateBoardModalOpen(true); }}
+                  onClick={() => { setActivePopup(null); setCreateBoardModalOpen(true); }}
                 >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M4 4h6v16H4V4zm10 0h6v8h-6V4z" />
@@ -380,12 +381,12 @@ const TopNav = ({ setSidebarOpen, onBoardCreated }) => {
       {isCreateBoardModalOpen && (
         <div
           style={styles.modalOverlay}
-          onClick={() => setIsCreateBoardModalOpen(false)}
+          onClick={() => setCreateBoardModalOpen(false)}
         >
           <div style={styles.modal} onClick={(e) => e.stopPropagation()}>
             <div style={styles.modalHeader}>
               <h3 style={styles.modalTitle}>Create board</h3>
-              <button style={styles.modalClose} onClick={() => setIsCreateBoardModalOpen(false)}>✕</button>
+              <button style={styles.modalClose} onClick={() => setCreateBoardModalOpen(false)}>✕</button>
             </div>
 
             {/* Mini board preview */}

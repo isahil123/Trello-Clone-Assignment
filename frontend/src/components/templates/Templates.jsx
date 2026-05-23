@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast as hotToast } from 'react-hot-toast';
 import apiClient from '../../api/client';
@@ -56,8 +56,43 @@ const Templates = ({ onBoardCreated, isSidebarOpen, setSidebarOpen }) => {
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [globalTemplates, setGlobalTemplates] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const filteredTemplates = mockNewTemplates.filter(t => {
+  // Fetch all templates from all boards
+  useEffect(() => {
+    const fetchTemplates = async () => {
+      try {
+        setIsLoading(true);
+        const res = await apiClient.get('/boards');
+        const boards = res.data.data;
+        // Extract all cards marked as templates across all boards
+        const templates = boards.flatMap(b => 
+          (b.lists || []).flatMap(l => 
+            (l.cards || []).filter(c => c.isTemplate).map(c => ({
+              id: c.id,
+              title: c.title,
+              description: c.description || 'Custom template created from ' + b.title,
+              author: 'You',
+              color: 'linear-gradient(135deg, #0079bf, #0c66e4)', // default trello blue gradient
+              category: 'c1',
+              copies: '0',
+              views: '1',
+              boardTitle: b.title,
+            }))
+          )
+        );
+        setGlobalTemplates(templates);
+      } catch (err) {
+        console.error('Failed to fetch templates:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchTemplates();
+  }, []);
+
+  const filteredTemplates = [...mockNewTemplates, ...globalTemplates].filter(t => {
     if (searchQuery && !t.title.toLowerCase().includes(searchQuery.toLowerCase())) return false;
     if (selectedCategory && t.category !== selectedCategory) return false;
     return true;

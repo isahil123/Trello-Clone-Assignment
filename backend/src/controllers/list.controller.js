@@ -20,10 +20,10 @@ class ListController {
   async updateList(req, res) {
     try {
       const { listId } = req.params;
-      const { title } = req.body;
+      const { title, isCollapsed } = req.body;
 
-      if (!title || typeof title !== 'string' || title.trim() === '') {
-        return res.status(400).json({ success: false, error: 'List title is required' });
+      if (title === undefined && isCollapsed === undefined) {
+        return res.status(400).json({ success: false, error: 'title or isCollapsed is required' });
       }
 
       // Verify list exists before updating
@@ -32,11 +32,32 @@ class ListController {
         return res.status(404).json({ success: false, error: 'List not found' });
       }
 
-      const list = await listService.updateList(listId, { title });
+      const updateData = {};
+      if (title !== undefined) updateData.title = title;
+      if (isCollapsed !== undefined) updateData.isCollapsed = isCollapsed;
+
+      const list = await listService.updateList(listId, updateData);
       res.status(200).json({ success: true, data: list });
     } catch (error) {
       console.error('Error updating list:', error);
       res.status(500).json({ success: false, error: 'Failed to update list' });
+    }
+  }
+
+  async copyList(req, res) {
+    try {
+      const { listId } = req.params;
+      const { title, position } = req.body;
+
+      if (typeof position !== 'number') {
+        return res.status(400).json({ success: false, error: 'position is required' });
+      }
+
+      const list = await listService.copyList(listId, title, position);
+      res.status(201).json({ success: true, data: list });
+    } catch (error) {
+      console.error('Error copying list:', error);
+      res.status(500).json({ success: false, error: 'Failed to copy list' });
     }
   }
 
@@ -72,6 +93,16 @@ class ListController {
     } catch (error) {
       console.error('Error reordering lists:', error);
       res.status(500).json({ success: false, error: 'Failed to reorder lists' });
+    }
+  }
+  async normalizePositions(req, res) {
+    try {
+      const { listId } = req.params;
+      const result = await listService.normalizePositions(listId);
+      res.status(200).json({ success: true, data: result });
+    } catch (error) {
+      console.error('Error normalizing positions:', error);
+      res.status(500).json({ success: false, error: 'Failed to normalize positions' });
     }
   }
 }

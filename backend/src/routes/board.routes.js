@@ -14,8 +14,15 @@ router.get('/:boardId', boardController.getBoardById);
 // PATCH /api/boards/:boardId -> update board properties
 router.patch('/:boardId', boardController.updateBoard);
 
+// DELETE /api/boards/:boardId -> delete a board
+router.delete('/:boardId', boardController.deleteBoard);
+
 // Mount label routes for a specific board
 const labelRoutes = require('./label.routes');
 router.use('/:boardId/labels', labelRoutes);
+
+// Board Members
+router.post('/:boardId/members', boardController.addMember);
+router.delete('/:boardId/members/:userId', boardController.removeMember);
 
 module.exports = router;

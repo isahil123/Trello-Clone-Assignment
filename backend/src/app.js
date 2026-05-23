@@ -39,9 +39,19 @@ app.use("/api/checklists", checklistRoutes);
 app.use("/api/search", searchRoutes);
 app.use("/api/users", userRoutes);
 
-// Basic 404 handler for unknown routes
-app.use((req, res, next) => {
+const path = require("path");
+
+// Basic 404 handler for unknown API routes
+app.use("/api/*", (req, res, next) => {
   res.status(404).json({ error: "Endpoint not found" });
+});
+
+// Serve frontend in production
+const frontendPath = path.join(__dirname, "../../../frontend/dist");
+app.use(express.static(frontendPath));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(frontendPath, "index.html"));
 });
 
 module.exports = app;

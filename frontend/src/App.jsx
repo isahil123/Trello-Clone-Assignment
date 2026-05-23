@@ -10,10 +10,14 @@ import Board from "./components/board/Board";
 import Templates from "./components/templates/Templates";
 import { BoardProvider } from "./context/BoardContext";
 import apiClient from "./api/client";
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { useHomeBoards } from "./api/queries";
 import "./index.css";
 
+const queryClient = new QueryClient();
+
 // Wrapper component for the board page
-const BoardPage = ({ boards, isSidebarOpen, setSidebarOpen, onBoardUpdated }) => {
+const BoardPage = ({ boards, isSidebarOpen, setSidebarOpen, onBoardUpdated, onBoardDeleted }) => {
   const { boardId } = useParams();
   return (
     <>
@@ -38,6 +42,7 @@ const BoardPage = ({ boards, isSidebarOpen, setSidebarOpen, onBoardUpdated }) =>
           setSidebarOpen={setSidebarOpen}
           boards={boards}
           onBoardUpdated={onBoardUpdated}
+          onBoardDeleted={onBoardDeleted}
         />
       </div>
     </>
@@ -66,29 +71,24 @@ const TemplatesPage = ({
 
 
 function AppContent() {
+  const { data: homeBoards, isLoading: loading, error: fetchError } = useHomeBoards();
   const [boards, setBoards] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [isSidebarOpen, setSidebarOpen] = useState(false); // Mobile sidebar toggle state
+  const [isSidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
-    const fetchBoards = async () => {
-      try {
-        const response = await apiClient.get("/boards");
-        setBoards(response.data.data || []);
-      } catch (err) {
-        console.error(err);
-        const backendMessage = err?.response?.data?.error;
-        setError(
-          backendMessage ||
-            "Could not connect to the backend API. Is the server running?",
-        );
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchBoards();
-  }, []);
+    if (homeBoards) setBoards(homeBoards);
+  }, [homeBoards]);
+
+  useEffect(() => {
+    if (fetchError) {
+      const backendMessage = fetchError?.response?.data?.error;
+      setError(
+        backendMessage ||
+          "Could not connect to the backend API. Is the server running?",
+      );
+    }
+  }, [fetchError]);
 
   if (loading) {
     return (
@@ -137,6 +137,10 @@ function AppContent() {
     setBoards((prev) => prev.map((b) => (b.id === updatedBoard.id ? updatedBoard : b)));
   };
 
+  const handleBoardDeleted = (deletedBoardId) => {
+    setBoards((prev) => prev.filter((b) => b.id !== deletedBoardId));
+  };
+
   return (
     <div className="app-container">
       <TopNav
@@ -149,7 +153,7 @@ function AppContent() {
             path="/"
             element={<Dashboard boards={boards} onBoardsLoaded={setBoards} isSidebarOpen={isSidebarOpen} setSidebarOpen={setSidebarOpen} />}
           />
-          <Route path="/home" element={<HomePage boards={boards} isSidebarOpen={isSidebarOpen} setSidebarOpen={setSidebarOpen} />} />
+          <Route path="/home" element={<HomePage boards={boards} onBoardsLoaded={setBoards} isSidebarOpen={isSidebarOpen} setSidebarOpen={setSidebarOpen} />} />
           <Route
             path="/templates"
             element={
@@ -170,6 +174,7 @@ function AppContent() {
                 isSidebarOpen={isSidebarOpen}
                 setSidebarOpen={setSidebarOpen}
                 onBoardUpdated={handleBoardUpdated}
+                onBoardDeleted={handleBoardDeleted}
               />
             }
           />
@@ -181,12 +186,14 @@ function AppContent() {
 
 function App() {
   return (
-    <BrowserRouter>
-      <Toaster position="bottom-center" />
-      <BoardProvider>
-        <AppContent />
-      </BoardProvider>
-    </BrowserRouter>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <Toaster position="bottom-right" toastOptions={{ duration: 3000 }} />
+        <BoardProvider>
+          <AppContent />
+        </BoardProvider>
+      </BrowserRouter>
+    </QueryClientProvider>
   );
 }
 

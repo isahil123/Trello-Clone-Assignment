@@ -55,6 +55,39 @@ class BoardController {
       res.status(500).json({ success: false, error: 'Failed to update board' });
     }
   }
+
+  async addMember(req, res) {
+    try {
+      const { boardId } = req.params;
+      const { userId } = req.body;
+      if (!userId) return res.status(400).json({ success: false, error: 'userId is required' });
+      const member = await boardService.addMember(boardId, userId);
+      res.status(201).json({ success: true, data: member });
+    } catch (error) {
+      res.status(500).json({ success: false, error: 'Failed to add member' });
+    }
+  }
+
+  async removeMember(req, res) {
+    try {
+      const { boardId, userId } = req.params;
+      await boardService.removeMember(boardId, userId);
+      res.status(204).send();
+    } catch (error) {
+      res.status(500).json({ success: false, error: 'Failed to remove member' });
+    }
+  }
+
+  async deleteBoard(req, res) {
+    try {
+      const { boardId } = req.params;
+      await boardService.deleteBoard(boardId);
+      res.status(200).json({ success: true, message: 'Board deleted successfully' });
+    } catch (error) {
+      console.error('Error deleting board:', error);
+      res.status(500).json({ success: false, error: 'Failed to delete board' });
+    }
+  }
 }
 
 module.exports = new BoardController();

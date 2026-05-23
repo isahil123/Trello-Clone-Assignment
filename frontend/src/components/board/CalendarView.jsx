@@ -282,6 +282,7 @@ const CalendarView = ({ lists, boardId, setLists }) => {
                   setShowAddCardForm(true);
                   setShowAddMenu(false);
                   if (lists.length > 0) setNewCardListId(lists[0].id);
+                  setNewCardDueDate(new Date().toISOString().split('T')[0]);
                 }}
               >
                 Card

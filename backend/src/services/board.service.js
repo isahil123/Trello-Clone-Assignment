@@ -55,11 +55,21 @@ class BoardService {
     const board = await prisma.board.create({
       data: {
         title: data.title,
-        description: data.description || null
+        description: data.description || null,
+        background: data.background || null
       }
     });
 
     try {
+      // Seed priority labels
+      await prisma.label.createMany({
+        data: [
+          { title: 'Urgent', color: 'RED', boardId: board.id },
+          { title: 'High', color: 'ORANGE', boardId: board.id },
+          { title: 'Medium', color: 'YELLOW', boardId: board.id },
+          { title: 'Low', color: 'GREEN', boardId: board.id }
+        ]
+      });
       if (data.title === 'My Tasks | Trello') {
         const todoList = await prisma.list.create({ data: { title: 'To Do', position: 1000, boardId: board.id } });
         const doingList = await prisma.list.create({ data: { title: 'Doing', position: 2000, boardId: board.id } });
@@ -96,12 +106,38 @@ class BoardService {
     const updateData = {};
     if (data.title !== undefined) updateData.title = data.title;
     if (data.description !== undefined) updateData.description = data.description;
+    if (data.background !== undefined) updateData.background = data.background;
     if (data.isStarred !== undefined) updateData.isStarred = data.isStarred;
     if (data.visibility !== undefined) updateData.visibility = data.visibility;
 
     return await prisma.board.update({
       where: { id: boardId },
       data: updateData
+    });
+  }
+
+  async addMember(boardId, userId, role = 'MEMBER') {
+    return await prisma.boardMember.create({
+      data: {
+        boardId,
+        userId,
+        role
+      },
+      include: { user: true }
+    });
+  }
+
+  async removeMember(boardId, userId) {
+    return await prisma.boardMember.delete({
+      where: {
+        boardId_userId: { boardId, userId }
+      }
+    });
+  }
+
+  async deleteBoard(boardId) {
+    return await prisma.board.delete({
+      where: { id: boardId }
     });
   }
 }

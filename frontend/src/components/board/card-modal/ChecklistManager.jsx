@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 const ChecklistManager = ({
   checklists,
   handleDeleteChecklist,
   handleToggleItem,
   handleDeleteItem,
-  handleAddItem
+  handleAddItem,
 }) => {
   const [newItemInputs, setNewItemInputs] = useState({});
 
@@ -32,7 +32,6 @@ const ChecklistManager = ({
               </button>
             </div>
 
-            {/* Progress bar */}
             <div className="progress-row">
               <span className="progress-text">{progress}%</span>
               <div className="progress-bar-bg">
@@ -46,7 +45,6 @@ const ChecklistManager = ({
               </div>
             </div>
 
-            {/* Items */}
             <div className="checklist-items">
               {checklist.items.map((item) => (
                 <div key={item.id} className="checklist-item">
@@ -54,24 +52,18 @@ const ChecklistManager = ({
                     type="checkbox"
                     checked={item.isCompleted}
                     onChange={() =>
-                      handleToggleItem(
-                        checklist.id,
-                        item.id,
-                        item.isCompleted,
-                      )
+                      handleToggleItem(checklist.id, item.id, item.isCompleted)
                     }
                     className="checklist-checkbox"
                   />
                   <span
-                    className={`item-title ${item.isCompleted ? 'completed' : ''}`}
+                    className={`item-title ${item.isCompleted ? "completed" : ""}`}
                   >
                     {item.title}
                   </span>
                   <button
                     className="item-delete-btn"
-                    onClick={() =>
-                      handleDeleteItem(checklist.id, item.id)
-                    }
+                    onClick={() => handleDeleteItem(checklist.id, item.id)}
                   >
                     ✕
                   </button>
@@ -79,7 +71,6 @@ const ChecklistManager = ({
               ))}
             </div>
 
-            {/* Add item */}
             <div className="add-item-row">
               <input
                 type="text"
@@ -93,8 +84,14 @@ const ChecklistManager = ({
                 }
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {
-                    handleAddItem(checklist.id, newItemInputs[checklist.id] || "");
-                    setNewItemInputs((prev) => ({ ...prev, [checklist.id]: "" }));
+                    handleAddItem(
+                      checklist.id,
+                      newItemInputs[checklist.id] || "",
+                    );
+                    setNewItemInputs((prev) => ({
+                      ...prev,
+                      [checklist.id]: "",
+                    }));
                   }
                 }}
                 className="add-item-input"
@@ -102,7 +99,10 @@ const ChecklistManager = ({
               <button
                 className="card-modal-btn add-btn"
                 onClick={() => {
-                  handleAddItem(checklist.id, newItemInputs[checklist.id] || "");
+                  handleAddItem(
+                    checklist.id,
+                    newItemInputs[checklist.id] || "",
+                  );
                   setNewItemInputs((prev) => ({ ...prev, [checklist.id]: "" }));
                 }}
               >

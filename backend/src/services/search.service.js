@@ -16,6 +16,7 @@ class SearchService {
       where: {
         title: {
           contains: searchTerm,
+          mode: 'insensitive',
         },
       },
       take: 5,
@@ -25,8 +26,8 @@ class SearchService {
     const cards = await prisma.card.findMany({
       where: {
         OR: [
-          { title: { contains: searchTerm } },
-          { description: { contains: searchTerm } },
+          { title: { contains: searchTerm, mode: 'insensitive' } },
+          { description: { contains: searchTerm, mode: 'insensitive' } },
         ],
       },
       include: {
