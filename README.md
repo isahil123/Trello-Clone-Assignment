@@ -1,6 +1,6 @@
 # Trello Clone (SDE Intern Fullstack Assignment)
 
-A fully functional, Kanban-style project management web application that closely replicates Trello's design and user experience. Built with React (Vite) and Node.js (Express) using Prisma ORM and a local SQLite database for development.
+A fully functional, Kanban-style project management web application that closely replicates Trello's design and user experience. Built with React (Vite) and Node.js (Express) using Prisma ORM and **PostgreSQL** as the primary database.
 
 ## Features Included
 
@@ -48,7 +48,7 @@ A fully functional, Kanban-style project management web application that closely
 - **Frontend:** React 18, React Router, `@hello-pangea/dnd` (for smooth drag and drop), Vanilla CSS for styling (Trello UI clone)
 - **Backend:** Node.js, Express.js
 - **Database ORM:** Prisma
-- **Database:** SQLite for local development
+- **Database:** PostgreSQL
 - **Development Server:** Vite
 
 ## Database Schema Highlights
@@ -70,11 +70,12 @@ The database is built using Prisma and features a heavily relational schema:
 
 ### 1. Database Setup
 
-1. Use the bundled local database configuration in `backend/.env`:
+1. Ensure you have a running PostgreSQL instance (local or cloud like Neon/Supabase).
+2. Configure your connection string in `backend/.env`:
    ```bash
-   DATABASE_URL="file:./dev.db"
+   DATABASE_URL="postgresql://USER:PASSWORD@HOST:PORT/DATABASE"
    ```
-2. Prisma creates `backend/prisma/dev.db` when you run `npx prisma db push`.
+3. Prisma will connect to this database to push the schema in the next step.
 
 ### 2. Backend Setup
 
