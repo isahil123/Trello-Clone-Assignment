@@ -14,7 +14,7 @@ import apiClient from "./api/client";
 import "./index.css";
 
 // Wrapper component for the board page
-const BoardPage = ({ boards, isSidebarOpen, setSidebarOpen }) => {
+const BoardPage = ({ boards, isSidebarOpen, setSidebarOpen, onBoardUpdated }) => {
   const { boardId } = useParams();
   return (
     <>
@@ -38,6 +38,7 @@ const BoardPage = ({ boards, isSidebarOpen, setSidebarOpen }) => {
           isSidebarOpen={isSidebarOpen}
           setSidebarOpen={setSidebarOpen}
           boards={boards}
+          onBoardUpdated={onBoardUpdated}
         />
       </div>
     </>
@@ -135,13 +136,15 @@ function AppContent() {
   const handleBoardCreated = (newBoard, tempId = null) => {
     setBoards((prev) => {
       if (tempId) {
-        // Reconcile: swap temp entry for real server board
         return prev.map((b) => (b.id === tempId ? newBoard : b));
       }
-      // Optimistic insert (no duplicate guard)
       if (prev.find((b) => b.id === newBoard.id)) return prev;
       return [...prev, newBoard];
     });
+  };
+
+  const handleBoardUpdated = (updatedBoard) => {
+    setBoards((prev) => prev.map((b) => (b.id === updatedBoard.id ? updatedBoard : b)));
   };
 
   return (
@@ -285,6 +288,7 @@ function AppContent() {
                 boards={boards}
                 isSidebarOpen={isSidebarOpen}
                 setSidebarOpen={setSidebarOpen}
+                onBoardUpdated={handleBoardUpdated}
               />
             }
           />

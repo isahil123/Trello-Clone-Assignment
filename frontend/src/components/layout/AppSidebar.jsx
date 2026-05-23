@@ -98,7 +98,7 @@ const AppSidebar = ({ boards = [] }) => {
 
               <div
                 className={`accordion-item${isActive('/members') ? ' active' : ''}`}
-                onClick={() => navigate('/members')}
+                onClick={handleOutOfScope}
               >
                 <span className="icon">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -111,7 +111,7 @@ const AppSidebar = ({ boards = [] }) => {
 
               <div
                 className={`accordion-item${isActive('/settings') ? ' active' : ''}`}
-                onClick={() => navigate('/settings')}
+                onClick={handleOutOfScope}
               >
                 <span className="icon">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -123,7 +123,7 @@ const AppSidebar = ({ boards = [] }) => {
 
               <div
                 className={`accordion-item${isActive('/billing') ? ' active' : ''}`}
-                onClick={() => navigate('/billing')}
+                onClick={handleOutOfScope}
               >
                 <span className="icon">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -135,7 +135,7 @@ const AppSidebar = ({ boards = [] }) => {
 
               <div
                 className={`accordion-item${isActive('/linked-projects') ? ' active' : ''}`}
-                onClick={() => navigate('/linked-projects')}
+                onClick={handleOutOfScope}
               >
                 <span className="icon">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">

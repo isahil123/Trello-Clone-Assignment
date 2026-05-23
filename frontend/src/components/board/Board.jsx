@@ -19,7 +19,7 @@ import './Board.css';
 const recalcPositions = (items) =>
   items.map((item, index) => ({ ...item, position: (index + 1) * 1000 }));
 
-const Board = ({ boardId, isSidebarOpen, setSidebarOpen, boards = [] }) => {
+const Board = ({ boardId, isSidebarOpen, setSidebarOpen, boards = [], onBoardUpdated }) => {
   const navigate = useNavigate();
   const { 
     board, 
@@ -79,7 +79,8 @@ const Board = ({ boardId, isSidebarOpen, setSidebarOpen, boards = [] }) => {
     const newStatus = !isStarred;
     setIsStarred(newStatus);
     try {
-      await apiClient.patch(`/boards/${boardId}`, { isStarred: newStatus });
+      const response = await apiClient.patch(`/boards/${boardId}`, { isStarred: newStatus });
+      if (onBoardUpdated) onBoardUpdated(response.data.data);
     } catch (err) {
       setIsStarred(!newStatus);
       toast.error('Failed to update star status');
