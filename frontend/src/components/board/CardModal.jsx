@@ -112,7 +112,6 @@ const CardModal = ({ card, listTitle, boardId, onClose }) => {
   // ---- Description ----
   const handleSaveDescription = async () => {
     try {
-      console.log("Saving description for card:", card.id); // oops forgot to remove this
       const res = await apiClient.patch(`/cards/${card.id}`, { description });
       syncParentCard({ ...res.data.data });
       setIsEditingDesc(false);
