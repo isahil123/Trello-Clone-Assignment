@@ -1,0 +1,294 @@
+.topnav {
+  height: 48px;
+  background-color: #1d2125;
+  border-bottom: 1px solid hsla(0, 0%, 100%, 0.16);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8px;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  gap: 4px;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.topnav-left {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+}
+
+.topnav-middle {
+  flex: 2;
+  display: flex;
+  justify-content: center;
+}
+
+.topnav-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  justify-content: flex-end;
+}
+
+.topnav-btn {
+  background: none;
+  border: none;
+  color: #9fadbc;
+  cursor: pointer;
+  padding: 6px 8px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.topnav-btn:hover {
+  background-color: hsla(0, 0%, 100%, 0.08);
+  color: #b6c2cf;
+}
+
+.topnav-btn:active {
+  transform: scale(0.96);
+}
+
+.topnav-logo {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  margin-right: 8px;
+  opacity: 0.9;
+  color: #579dff;
+  transition: opacity 0.2s ease, background-color 0.2s ease;
+}
+
+.topnav-logo:hover {
+  opacity: 1;
+  background-color: hsla(0, 0%, 100%, 0.08);
+}
+
+.topnav-logo-text {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: #9fadbc;
+}
+
+.topnav-create-btn {
+  background-color: #579dff;
+  color: #1d2125;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.topnav-create-btn::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%);
+  transform: rotate(30deg) translateX(-100%);
+  transition: transform 0.5s ease-in-out;
+}
+
+.topnav-create-btn:hover::after {
+  transform: rotate(30deg) translateX(100%);
+}
+
+.topnav-create-btn:hover {
+  background-color: #85b8ff;
+  box-shadow: 0 4px 8px rgba(87,157,255,0.2);
+}
+
+.topnav-create-btn:active {
+  transform: scale(0.96);
+}
+
+/* Search Wrapper */
+.topnav-search-wrapper {
+  display: flex;
+  align-items: center;
+  backgroundColor: #22272b;
+  border: 1px solid #738496;
+  border-radius: 8px;
+  padding: 0 10px;
+  width: 100%;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  height: 32px;
+  box-sizing: border-box;
+}
+
+.topnav-search-wrapper.focused {
+  background-color: #22272b;
+  border-color: #579dff;
+  box-shadow: 0 0 0 2px rgba(87,157,255,0.3);
+}
+
+.topnav-search-icon {
+  flex-shrink: 0;
+  color: #9fadbc;
+  margin-right: 8px;
+}
+
+.topnav-search-input {
+  background-color: transparent;
+  border: none;
+  color: #b6c2cf;
+  outline: none;
+  width: 100%;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+/* Avatar */
+.topnav-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff78cb, #c377e0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+  flex-shrink: 0;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.topnav-avatar:hover {
+  transform: scale(1.05);
+  box-shadow: 0 2px 8px rgba(255,120,203,0.4);
+}
+
+/* Popover / Menu */
+.topnav-menu {
+  position: absolute;
+  top: 44px;
+  left: 0;
+  background-color: #282e33;
+  border: 1px solid hsla(0,0%,100%,0.16);
+  border-radius: 12px;
+  padding: 8px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  z-index: 1000;
+  min-width: 200px;
+  animation: fadeIn 0.15s ease-out;
+}
+
+.topnav-menu-item {
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #b6c2cf;
+  font-size: 14px;
+  transition: background-color 0.1s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.topnav-menu-item:hover {
+  background-color: hsla(0,0%,100%,0.08);
+  color: #fff;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Notification dot pulse ── */
+@keyframes pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(239, 92, 72, 0.7); }
+  70%  { box-shadow: 0 0 0 6px rgba(239, 92, 72, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(239, 92, 72, 0); }
+}
+
+/* ── Light mode overrides applied to <html class="light-mode"> ── */
+:root.light-mode {
+  --bg-primary: #f4f5f7;
+  --bg-secondary: #ffffff;
+  --bg-overlay: #ebecf0;
+  --text-primary: #172b4d;
+  --text-secondary: #5e6c84;
+  --border-color: rgba(9, 30, 66, 0.14);
+}
+
+:root.light-mode body,
+:root.light-mode .topnav,
+:root.light-mode .dashboard-layout,
+:root.light-mode .dashboard-sidebar,
+:root.light-mode .dashboard-content {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+:root.light-mode .topnav {
+  background-color: #0052cc;
+  border-bottom-color: rgba(0,0,0,0.1);
+}
+
+:root.light-mode .topnav-btn,
+:root.light-mode .topnav-logo-text,
+:root.light-mode .topnav-search-input {
+  color: #ffffff;
+}
+
+:root.light-mode .topnav-btn:hover {
+  background-color: rgba(255,255,255,0.2);
+}
+
+:root.light-mode .topnav-search-wrapper {
+  background-color: rgba(255,255,255,0.25);
+  border-color: rgba(255,255,255,0.4);
+}
+
+:root.light-mode .topnav-search-wrapper.focused {
+  background-color: #fff;
+  border-color: #fff;
+}
+
+:root.light-mode .topnav-search-input {
+  color: #172b4d;
+}
+
+:root.light-mode .topnav-search-input::placeholder {
+  color: rgba(255,255,255,0.6);
+}
+
+:root.light-mode .sidebar-nav-item {
+  color: #172b4d;
+}
+
+:root.light-mode .sidebar-nav-item:hover,
+:root.light-mode .accordion-item:hover {
+  background-color: rgba(9,30,66,0.06);
+}
+
+:root.light-mode .sidebar-nav-item.active {
+  background-color: rgba(9,30,66,0.1);
+  color: #0052cc;
+  border-left-color: #0052cc;
+}
+

@@ -1,0 +1,199 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String
+  avatarUrl String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  boards                 BoardMember[]
+  cardMembers            CardMember[]
+  assignedChecklistItems ChecklistItem[] @relation("ChecklistItemAssignee")
+  comments               Comment[]
+}
+
+model Board {
+  id          String   @id @default(uuid())
+  title       String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  isStarred   Boolean  @default(false)
+  visibility  String   @default("Workspace")
+
+  members BoardMember[]
+  lists   List[]
+  labels  Label[]
+}
+
+enum BoardRole {
+  ADMIN
+  MEMBER
+  GUEST
+}
+
+model BoardMember {
+  id        String    @id @default(uuid())
+  boardId   String
+  userId    String
+  role      BoardRole @default(MEMBER)
+  createdAt DateTime  @default(now())
+
+  board Board @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([boardId, userId])
+  @@index([userId])
+}
+
+model List {
+  id        String   @id @default(uuid())
+  title     String
+  position  Float    
+  boardId   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  board Board  @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  cards Card[]
+
+  // Ensures no two lists on the same board have the exact same position
+  @@unique([boardId, position])
+}
+
+model Card {
+  id          String    @id @default(uuid())
+  title       String
+  description String?
+  position    Float
+  isArchived  Boolean   @default(false)
+  dueDate     DateTime?
+  listId      String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  list       List          @relation(fields: [listId], references: [id], onDelete: Cascade)
+  checklists Checklist[]
+  labels     CardLabel[]
+  members    CardMember[]
+  comments   Comment[]
+
+  // Ensures no two cards in the same list have the exact same position
+  @@unique([listId, position])
+  
+  // Index for querying cards by upcoming deadlines across lists
+  @@index([dueDate]) 
+}
+
+enum LabelColor {
+  RED
+  BLUE
+  GREEN
+  YELLOW
+  PURPLE
+  ORANGE
+  SKY
+  PINK
+  BLACK
+}
+
+model Label {
+  id        String     @id @default(uuid())
+  title     String?    
+  color     LabelColor
+  boardId   String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  board Board       @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  cards CardLabel[]
+
+  // Prevents creating identical duplicate labels on the same board
+  @@unique([boardId, title, color])
+}
+
+model CardLabel {
+  id        String   @id @default(uuid())
+  cardId    String
+  labelId   String
+  createdAt DateTime @default(now())
+
+  card  Card  @relation(fields: [cardId], references: [id], onDelete: Cascade)
+  label Label @relation(fields: [labelId], references: [id], onDelete: Cascade)
+
+  @@unique([cardId, labelId]) 
+}
+
+model CardMember {
+  id        String   @id @default(uuid())
+  cardId    String
+  userId    String
+  createdAt DateTime @default(now())
+
+  card Card @relation(fields: [cardId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([cardId, userId]) 
+}
+
+model Checklist {
+  id        String   @id @default(uuid())
+  title     String   @default("Checklist")
+  cardId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  card  Card            @relation(fields: [cardId], references: [id], onDelete: Cascade)
+  items ChecklistItem[]
+
+  @@index([cardId])
+}
+
+model ChecklistItem {
+  id          String    @id @default(uuid())
+  title       String
+  isCompleted Boolean   @default(false)
+  position    Float
+  dueDate     DateTime?
+  assigneeId  String?
+  checklistId String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  checklist Checklist @relation(fields: [checklistId], references: [id], onDelete: Cascade)
+  assignee  User?     @relation("ChecklistItemAssignee", fields: [assigneeId], references: [id], onDelete: SetNull)
+
+  // Ensures no two items in a checklist have the exact same position
+  @@unique([checklistId, position])
+  
+  // Indexes for querying overdue or upcoming checklist items assigned to a specific user
+  @@index([assigneeId])
+  @@index([dueDate])
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  text      String
+  cardId    String
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  card Card @relation(fields: [cardId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([cardId])
+  @@index([userId])
+}
